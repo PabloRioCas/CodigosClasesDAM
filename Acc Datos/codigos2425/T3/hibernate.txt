@@ -1,0 +1,125 @@
+CLIENTE - trabaja con objetos							BASE DATOS - trabaja con tblas, filas columnas 
+					ORM		jdbc:mysql://localhost/database
+
+El modo de trabajar es: 
+	1. el cliente le dá un objeto al orm,
+	2. el orm lo traduce y se lo dá al jdbc
+	3. el jdbc lo transacciona a la base de datos
+
+ORM -> Hibernate -> OQL -> HQL Lenguaje de consulta de hibernate
+
+SessionFactory
+Session
+	currentSession
+	beginTransaction
+	accion
+		persist,merge
+		get -> solo por id, si quiero un filtro avanzado -> HQL
+		delete -> solo por id, si quiero un filtro avanzado -> HQL
+ 		update,merge  -> solo por id, si quiero un filtro avanzado -> HQL
+	commit
+	close
+
+Estructura del proyecto
+
+	src
+		MODEL -> clases que representan todos los datos que quiero manejar en el proyecto
+		DAO -> las clases (una por modelo) que permiten trabajar con las acciones de database del modelo correspondiente
+		DATABASE -> conexion con la database o fichero que permite arrancar la conexión con el dao -> Singleton
+
+MODEL - requisitos
+
+implements serializable
+variables privadas
+constructor con todo
+constructor sin nada
+getter y setter
+
+MODEL - anotaciones de hibernate
+@Entity -> indica que la clase sera parte de una clase u objeto que se llevara a bd
+@Table ->indica que la clase será asociada a la tabla con ese nombre. Si cambia, poner @Table(name="nombre_tabla")
+@Column -> indica que ese atributo irá a la columna con ese nombre. poner @Column(name="nombre_columna")
+@Id
+@GeneratedValue -> indica que ese atributo se asocia a un PK y es autoincremental
+@Embedded -> cuando un atributo de la clase tiene que ser leido desde otra clase, la cual será @Embeddable
+@NamedQueries -> junta todas las querys nombradas
+@NamedQuery -> crea una query con nombre y query
+
+QUERY SENCILLA
+
+SELECT * FROM trabajadores WHERE id = id
+UPDATE FROM TRABAJADORES SET correo = nuevo WHERE id = id
+DELETE FROM TRABAJADORES WHERE id = id
+
+
+QUERY AVANZADAS -> HQL -> Query
+
+SELECT -> SELECT * FROM TRABAJADORES
+SELECT -> SELECT * FROM TRABAJADORES WHERE localidad = parametro
+
+UPDATE 
+DELETE
+
+RELACIONES
+
+@onetoone -> una entidad se relaciona con otra entidad
+un trabajador tiene asignada una habitacion
+
+	- unidireccional
+	- bidireccional
+
+CLASE A -> donde tenemos la fk
+
+@OnetoOne(cascade)
+@JoinColumn(name="nombre_col_guarda_fk")
+private ClaseB claseb
+
+
+CLASE B
+@OnetoOne(mappedBy="nombre_atributo_clase a que guarda fk")
+private ClaseA clasea
+
+
+@onetomany
+una entidad se relaciona con otra entidad y a su vez esta entidad se relaciona con muchas de la entridad anterior
+
+un cliente tiene asociada una habitacion, pero en una habitacion a lo largo del tiempo se pueden quedar alojados muchos clientes
+
+	- unidireccional
+	- bidireccional
+
+CLASE A
+@ManytoOne(cascade)
+@JoinColumn(name="nombre_col_guarda_fk")
+private ClaseB claseb
+
+
+CLASE B
+@OnetoMany(mappedBy="nombre_atributo_clase a que guarda fk")
+private List<ClaseA> clasea
+
+@mayntomany -> tengo que hacer una tabla adicional
+
+una entidadA se relaciona con muchos elementos de la entidadB y una entidadB se 
+relaciona con muchos elementos de la entidadA
+
+un cliente realiza una reservaa que la hace un trabajador, este cliente puede realizar n reservas donde cada una de ellas puede ser gestionada por un trabajador diferente
+
+
+	- unidireccional
+	- bidireccional
+
+CLASE A
+@ManytoMany(cascade, fetch=eager o lazy?)
+@JoinTable(name="nombre_tabla_con_fks", joinColumns = @JoinColumn(name="nombre_columna_fk1"),inverseJoinColumns=@JoinColumn(name="nombre_columna_fk2"))
+private List<Trabajadores>
+
+
+
+CLASE A
+
+
+
+
+
+
