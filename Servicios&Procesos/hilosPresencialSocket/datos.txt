@@ -1,0 +1,6 @@
+--module-path "C:\JavaFX\openjfx-24_windows-x64_bin-sdk\javafx-sdk-24\lib" --add-modules javafx.controls,javafx.fxml
+
+
+https://stackoverflow.com/questions/74758570/cant-create-new-fxml-file-in-eclipse
+e(fx)clipse nightly
+https://download.eclipse.org/efxclipse/updates-nightly/repository/
